@@ -1,6 +1,5 @@
 "use client"
 
-import Image from "next/image";
 import { motion } from "motion/react"
 import { RenderLogo } from "@/components/render-logo"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -26,7 +25,7 @@ export default function Home() {
       </motion.header>
 
       <div>
-        <span className="text-foreground">hello, it's FlowTune</span>
+        <span className="text-foreground">hello, it&apos;s FlowTune</span>
         <span>a nice and ad-free music player</span>
       </div>
     </div>
