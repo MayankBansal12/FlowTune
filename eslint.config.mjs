@@ -1,16 +1,47 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
+import js from "@eslint/js";
+import globals from "globals";
+import tseslint from "typescript-eslint";
+import pluginReact from "eslint-plugin-react";
+import pluginPrettier from "eslint-plugin-prettier";
+import prettierConfig from "eslint-config-prettier";
+import pluginJsxA11y from "eslint-plugin-jsx-a11y";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
-
-const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+export default [
+  {
+    files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
+    languageOptions: {
+      globals: globals.browser,
+      parser: tseslint.parser,
+      parserOptions: {
+        ecmaVersion: "latest",
+        sourceType: "module",
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+    },
+    plugins: {
+      "@typescript-eslint": tseslint.plugin,
+      react: pluginReact,
+      prettier: pluginPrettier,
+      "jsx-a11y": pluginJsxA11y,
+    },
+    settings: {
+      react: {
+        version: "detect",
+      },
+    },
+    rules: {
+      ...js.configs.recommended.rules,
+      ...tseslint.configs.recommended.rules,
+      ...pluginReact.configs.flat.recommended.rules,
+      ...pluginJsxA11y.configs.recommended.rules,
+      ...prettierConfig.rules,
+      "prettier/prettier": "error",
+      "react/react-in-jsx-scope": "off", // Not needed in Next.js
+      "react/jsx-uses-react": "off", // Not needed in Next.js
+      "react/jsx-uses-vars": "error",
+      "no-undef": "off", // TypeScript handles this
+    },
+  },
 ];
-
-export default eslintConfig;

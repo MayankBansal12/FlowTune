@@ -16,7 +16,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "FlowTune | an open source and ad-free music player",
-  description: "FlowTune is a ad-free and an open source music player for playing copyright-free music.",
+  description:
+    "FlowTune is a ad-free and an open source music player for playing copyright-free music.",
 };
 
 export default function RootLayout({
@@ -29,10 +30,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background h-screen w-screen overflow-hidden`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-        >
+        <ThemeProvider attribute="class" defaultTheme="dark">
           {children}
         </ThemeProvider>
         <Toaster richColors closeButton position="top-center" />

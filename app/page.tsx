@@ -1,8 +1,8 @@
-"use client"
+"use client";
 
-import { motion } from "motion/react"
-import { RenderLogo } from "@/components/render-logo"
-import { ThemeToggle } from "@/components/theme-toggle"
+import { motion } from "motion/react";
+import { RenderLogo } from "@/components/render-logo";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function Home() {
   return (
@@ -13,7 +13,8 @@ export default function Home() {
         transition={{
           duration: 0.3,
         }}
-        className="flex justify-between items-center">
+        className="flex justify-between items-center"
+      >
         <div className="flex items-center gap-2">
           <RenderLogo />
           <h2 className="font-bold text-3xl">
