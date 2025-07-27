@@ -16,10 +16,10 @@ export function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   return (
-    <div className="flex items-center justify-between gap-4">
+    <div className="grid grid-cols-3 gap-4">
       <Dialog open={isSearchOpen} onOpenChange={setIsSearchOpen}>
         <DialogTitle className="sr-only">Search</DialogTitle>
-        <DialogTrigger asChild>
+        <DialogTrigger asChild className="col-span-1">
           <div className="flex items-center justify-between max-w-2xl min-w-96 bg-white/20 border border-white/10 rounded-xl py-1 px-4 cursor-pointer hover:bg-white/30 transition-colors">
             <SearchIcon size={20} />
             <Input
@@ -36,7 +36,7 @@ export function Header() {
         </DialogContent>
       </Dialog>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 col-span-2 justify-end">
         <Music4 size={28} />
         <Avatar>
           <AvatarImage src="https://github.com/shadcn.png" />
