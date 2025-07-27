@@ -1,32 +1,27 @@
-"use client"
+"use client";
 
-import { motion } from "motion/react"
-import { RenderLogo } from "@/components/render-logo"
-import { ThemeToggle } from "@/components/theme-toggle"
+import { motion } from "motion/react";
+import { TopSidebar, BottomSidebar } from "@/components/Sidebar";
 
 export default function Home() {
   return (
-    <div className="max-w-5xl mx-auto py-4 px-2 flex flex-col gap-2">
-      <motion.header
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{
-          duration: 0.3,
-        }}
-        className="flex justify-between items-center">
-        <div className="flex items-center gap-2">
-          <RenderLogo />
-          <h2 className="font-bold text-3xl">
-            <span className="text-foreground">Flow</span>
-            <span className="text-primary">Tune</span>
-          </h2>
+    <div className="mx-auto p-12 h-screen text-[#eee8df] gap-2 bg-[url('https://cdn.pixabay.com/photo/2023/01/12/20/17/loft-7714798_1280.jpg')] bg-cover bg-center">
+      <div className="grid grid-cols-6 h-full grid-rows-8  mx-auto ">
+        {/* sidebar */}
+        <div className="col-span-1 row-span-8 p-2">
+          <div className="row-span-2 col-span-2 backdrop-blur-md bg-white/20  rounded-2xl">
+            <TopSidebar />
+          </div>
+          <div className="row-span-6 backdrop-blur-md mt-6">
+            <BottomSidebar />
+          </div>
         </div>
-        <ThemeToggle />
-      </motion.header>
+        {/* main content */}
 
-      <div>
-        <span className="text-foreground">hello, it&apos;s FlowTune</span>
-        <span>a nice and ad-free music player</span>
+        <div className="col-span-4 row-span-8 backdrop-blur-md">dashboard</div>
+
+        {/* left sidebar */}
+        <div className="col-span-1 row-span-8 backdrop-blur-md">leftbar</div>
       </div>
     </div>
   );
