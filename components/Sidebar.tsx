@@ -1,4 +1,4 @@
-import React from "react";
+"use client";
 import { Home, Search, Compass, LibraryIcon, Plus } from "lucide-react";
 import { Library } from "@/components/Library";
 import { motion, AnimatePresence } from "motion/react";

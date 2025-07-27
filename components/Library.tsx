@@ -1,9 +1,8 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { HeartIcon, MoreHorizontalIcon, PlayIcon } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
+import { HeartIcon } from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
 
 const playlists = [
   {
