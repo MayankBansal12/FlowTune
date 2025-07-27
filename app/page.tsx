@@ -1,9 +1,10 @@
 "use client";
-import { Dashboard } from "@/components/dashboard";
-import { RightBar } from "@/components/rightbar";
-import { TopSidebar, BottomSidebar } from "@/components/sidebar/Sidebar";
 
 import { motion, AnimatePresence } from "motion/react";
+import { Dashboard } from "@/components/dashboard";
+import { RightBar } from "@/components/rightbar";
+import { MusicPlayer } from "@/components/dashboard/music-player";
+import { TopSidebar, BottomSidebar } from "@/components/sidebar/Sidebar";
 
 export default function Home() {
   return (
@@ -70,6 +71,10 @@ export default function Home() {
           >
             <RightBar />
           </motion.div>
+
+          <div className="mx-auto w-full">
+            <MusicPlayer />
+          </div>
         </motion.div>
       </AnimatePresence>
     </div>
