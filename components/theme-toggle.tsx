@@ -9,38 +9,41 @@ import themeLight from "../public/theme-toggle/theme-light.png";
 import themeDark from "../public/theme-toggle/theme-dark.png";
 
 const ThemeToggle = () => {
-    const { theme, setTheme } = useTheme();
-    const [mounted, setMounted] = useState(false)
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
-    const isLight = theme === "light";
-    const handleToggle = () => {
-        setTheme(isLight ? "dark" : "light");
-    };
+  const isLight = theme === "light";
+  const handleToggle = () => {
+    setTheme(isLight ? "dark" : "light");
+  };
 
-    useEffect(() => {
-        setMounted(true);
-    }, []);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-    if (!mounted) return <Button variant="secondary" size="icon">
-        <LoaderCircle />
-    </Button>;
-
+  if (!mounted)
     return (
-        <Button
-            size="icon"
-            className="size-8 cursor-pointer bg-transparent hover:bg-accent-foreground/10"
-            onClick={handleToggle}
-            aria-label={`Switch to ${isLight ? "dark" : "light"} mode`}
-        >
-            <Image
-                src={isLight ? themeLight : themeDark}
-                alt={`Switch to ${isLight ? "dark" : "light"} mode`}
-                width={24}
-                height={24}
-                priority
-            />
-        </Button>
+      <Button variant="secondary" size="icon">
+        <LoaderCircle />
+      </Button>
     );
+
+  return (
+    <Button
+      size="icon"
+      className="size-8 cursor-pointer bg-transparent hover:bg-accent-foreground/10"
+      onClick={handleToggle}
+      aria-label={`Switch to ${isLight ? "dark" : "light"} mode`}
+    >
+      <Image
+        src={isLight ? themeLight : themeDark}
+        alt={`Switch to ${isLight ? "dark" : "light"} mode`}
+        width={24}
+        height={24}
+        priority
+      />
+    </Button>
+  );
 };
 
 export { ThemeToggle };
