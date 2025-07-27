@@ -128,19 +128,19 @@ export function Library() {
     <Tabs defaultValue="playlists" className="max-w-xs w-full">
       <TabsList className="w-full grid grid-cols-3 gap-2 px-2">
         <TabsTrigger
-          className="text-xs bg-white/40 rounded-3xl cursor-pointer hover:bg-white/60 transition-all duration-300"
+          className="text-xs bg-white/20 rounded-2xl cursor-pointer hover:bg-white/40 transition-all duration-300"
           value="playlists"
         >
           Playlists
         </TabsTrigger>
         <TabsTrigger
-          className="text-xs bg-white/40 rounded-3xl cursor-pointer hover:bg-white/60 transition-all duration-300"
+          className="text-xs bg-white/20 rounded-2xl cursor-pointer hover:bg-white/40 transition-all duration-300"
           value="albums"
         >
           Albums
         </TabsTrigger>
         <TabsTrigger
-          className="text-xs bg-white/40 rounded-3xl cursor-pointer hover:bg-white/60 transition-all duration-300"
+          className="text-xs bg-white/20 rounded-2xl cursor-pointer hover:bg-white/40 transition-all duration-300"
           value="podcasts"
         >
           Podcasts

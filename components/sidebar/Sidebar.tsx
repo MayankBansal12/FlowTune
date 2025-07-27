@@ -1,6 +1,6 @@
 "use client";
 import { Home, Search, Compass, LibraryIcon, Plus } from "lucide-react";
-import { Library } from "@/components/Library";
+import { Library } from "@/components/sidebar/Library";
 import { motion, AnimatePresence } from "motion/react";
 
 const navItems = [
@@ -38,7 +38,7 @@ export function TopSidebar() {
           {navItems.map(({ icon: Icon, label }) => (
             <motion.li
               key={label}
-              className="flex items-center gap-2 px-3 py-1 cursor-pointer hover:bg-white/10 transition-all duration-300 rounded-3xl"
+              className="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-white/10 transition-all duration-300 rounded-xl"
               variants={itemVariants}
               transition={{ type: "tween" }}
             >
@@ -54,7 +54,7 @@ export function TopSidebar() {
 
 export function BottomSidebar() {
   return (
-    <div className=" grid grid-rows-12 py-4 px-2 h-full gap-2 bg-white/20 rounded-2xl">
+    <div className=" grid grid-rows-12 py-4 px-2 gap-2 bg-white/20 rounded-2xl">
       <div className="flex items-center justify-between pb-4 px-4 gap-2 row-span-1">
         <div className="flex items-center gap-2">
           <LibraryIcon size={20} />
@@ -68,7 +68,7 @@ export function BottomSidebar() {
         <Library />
       </div>
 
-      <div className="row-span-1 mx-2 cursor-pointer hover:bg-white/30 transition-all duration-300 flex items-center gap-2 justify-center bg-white/20 rounded-3xl">
+      <div className="row-span-1 mx-2 cursor-pointer mb-1 hover:bg-white/30 transition-all duration-300 flex items-center gap-2 justify-center bg-white/20 rounded-3xl">
         <Plus size={24} />
         <p className="">New Playlist</p>
       </div>
