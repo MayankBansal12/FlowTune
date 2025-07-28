@@ -72,7 +72,7 @@ export default function Home() {
             <RightBar />
           </motion.div>
 
-          <div className="mx-auto w-full">
+          <div className="w-[100vw] flex items-center justify-center">
             <MusicPlayer />
           </div>
         </motion.div>
