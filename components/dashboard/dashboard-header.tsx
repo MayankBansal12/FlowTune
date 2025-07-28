@@ -16,7 +16,7 @@ export function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   return (
-    <div className="grid grid-cols-3 gap-4">
+    <div className="grid grid-cols-3 row-span-1 gap-4 h-full">
       <Dialog open={isSearchOpen} onOpenChange={setIsSearchOpen}>
         <DialogTitle className="sr-only">Search</DialogTitle>
         <DialogTrigger asChild className="col-span-1">

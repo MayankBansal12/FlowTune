@@ -26,7 +26,7 @@ const itemVariants = {
 
 export function TopSidebar() {
   return (
-    <div className="py-4 px-2">
+    <div className="py-2 px-2">
       <AnimatePresence>
         <motion.ul
           className="flex flex-col gap-2"
@@ -54,7 +54,7 @@ export function TopSidebar() {
 
 export function BottomSidebar() {
   return (
-    <div className=" grid grid-rows-12 py-4 px-2 gap-2 bg-white/20 rounded-2xl">
+    <div className=" grid grid-rows-12 py-4 px-2 gap-2 bg-white/20 rounded-2xl h-full">
       <div className="flex items-center justify-between pb-4 px-4 gap-2 row-span-1">
         <div className="flex items-center gap-2">
           <LibraryIcon size={20} />
