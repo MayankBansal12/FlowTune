@@ -1,5 +1,6 @@
 "use client";
 import { Dashboard } from "@/components/dashboard";
+import { RightBar } from "@/components/rightbar";
 import { TopSidebar, BottomSidebar } from "@/components/sidebar/Sidebar";
 
 import { motion, AnimatePresence } from "motion/react";
@@ -19,7 +20,7 @@ export default function Home() {
           }}
         >
           <motion.div
-            className="col-span-1 row-span-8"
+            className="col-span-1 row-span-8 grid grid-rows-8 "
             initial={{ opacity: 0, x: -40 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{
@@ -29,7 +30,7 @@ export default function Home() {
             }}
           >
             <motion.div
-              className="row-span-2 col-span-2 backdrop-blur-md bg-white/20 rounded-2xl"
+              className="row-span-2 backdrop-blur-md bg-white/20 rounded-2xl"
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
@@ -54,7 +55,7 @@ export default function Home() {
             </motion.div>
           </motion.div>
           <motion.div
-            className="col-span-4 row-span-8 backdrop-blur-md bg-white/20 rounded-2xl"
+            className="col-span-4 row-span-8 backdrop-blur-md bg-white/20 rounded-2xl h-full"
             initial={{ opacity: 0, scale: 0.97, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
@@ -62,11 +63,13 @@ export default function Home() {
             <Dashboard />
           </motion.div>
           <motion.div
-            className="col-span-1 row-span-8 backdrop-blur-md bg-white/20 rounded-2xl"
+            className="col-span-1 row-span-8 "
             initial={{ opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.4, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          ></motion.div>
+          >
+            <RightBar />
+          </motion.div>
         </motion.div>
       </AnimatePresence>
     </div>
