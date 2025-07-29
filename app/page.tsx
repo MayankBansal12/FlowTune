@@ -3,15 +3,14 @@
 import { motion, AnimatePresence } from "motion/react";
 import { Dashboard } from "@/components/dashboard";
 import { RightBar } from "@/components/rightbar";
-import { MusicPlayer } from "@/components/dashboard/music-player";
 import { TopSidebar, BottomSidebar } from "@/components/sidebar/Sidebar";
 
 export default function Home() {
   return (
-    <div className="mx-auto py-12 px-4 h-screen text-[#eee8df] gap-2 bg-[url('https://cdn.pixabay.com/photo/2018/03/14/08/07/coffee-3224527_1280.jpg')] bg-cover bg-center">
+    <div className="mx-auto py-8 px-4 h-screen w-screen text-[#eee8df] gap-2 bg-cover bg-center">
       <AnimatePresence>
         <motion.div
-          className="grid grid-cols-6 h-full max-h-screen grid-rows-8 gap-4 mx-auto"
+          className="h-full grid [grid-template-columns:1fr_3.5fr_1.5fr] grid-rows-8 gap-4 mx-auto"
           initial={{ opacity: 1, y: 40, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 40, scale: 0.98 }}
@@ -20,13 +19,14 @@ export default function Home() {
             ease: [0.22, 1, 0.36, 1],
           }}
         >
+          {/* Left SideBar - Top and Bottom */}
           <motion.div
-            className="col-span-1 row-span-8 grid grid-rows-8 "
-            initial={{ opacity: 0, x: -40 }}
+            className="row-span-8 grid grid-rows-8"
+            initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{
-              delay: 0.15,
-              duration: 0.6,
+              delay: 0.05,
+              duration: 0.2,
               ease: [0.22, 1, 0.36, 1],
             }}
           >
@@ -55,26 +55,30 @@ export default function Home() {
               <BottomSidebar />
             </motion.div>
           </motion.div>
+
+          {/* Main Dashboard (mid of page) */}
           <motion.div
-            className="col-span-4 row-span-8 backdrop-blur-md bg-white/20 rounded-2xl h-full"
+            className="row-span-8 backdrop-blur-md bg-white/20 rounded-2xl h-full"
             initial={{ opacity: 0, scale: 0.97, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           >
             <Dashboard />
           </motion.div>
+
+          {/* Right SideBar */}
           <motion.div
-            className="col-span-1 row-span-8 "
-            initial={{ opacity: 0, x: 40 }}
+            className="row-span-8"
+            initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.4, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            transition={{
+              delay: 0.35,
+              duration: 0.5,
+              ease: [0.22, 1, 0.36, 1],
+            }}
           >
             <RightBar />
           </motion.div>
-
-          <div className="w-[100vw] flex items-center justify-center">
-            <MusicPlayer />
-          </div>
         </motion.div>
       </AnimatePresence>
     </div>

@@ -1,15 +1,72 @@
-import React from "react";
-import { ItemList, SongItem } from "../render-songs";
+"use client";
+
 import { mockMusicData } from "@/__mocks__/mockSongsData";
-import { Play } from "lucide-react";
-import { Button } from "../ui/button";
+import React, { useEffect, useState } from "react";
 import { motion } from "motion/react";
+import { ArrowDownLeft } from "lucide-react";
+import { ItemList, SongItem } from "@/components/render-songs";
+import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
+import { MusicPlayerControls } from "@/components/music-player-controls";
+import { formatTime, timeStringToSeconds } from "@/lib/helper";
 
 export function RightBar() {
+  const [currentPlayCollapsed, setCurrentPlayCollapsed] = useState(false);
+  const [currentSongPlaying] = useState(mockMusicData[1]);
+  const [isMusicPaused, setIsMusicPaused] = useState(true);
+  const [songProgress, setSongProgress] = useState(0);
+  // const [volumeOff, setVolumeOff] = useState(true)
+  // const [volumeLevel, setVolumeLevel] = useState(0);
+  const songLength =
+    timeStringToSeconds(currentSongPlaying.duration) ?? "00.00";
+
+  useEffect(() => {
+    if (isMusicPaused) return;
+
+    const interval = setInterval(() => {
+      setSongProgress((prev) => {
+        if (prev >= songLength) {
+          setIsMusicPaused(true);
+          return prev;
+        }
+        return prev + 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isMusicPaused, songLength]);
+
+  // const togglePlayPause = () => {
+  //   setIsMusicPaused((prev) => !prev);
+  // };
+
+  // const toggleVolumeLevel = () => {
+  //   if (!volumeOff) {
+  //     setVolumeLevel(0)
+  //   } else {
+  //     setVolumeLevel(100)
+  //   }
+  //   setVolumeOff((prev) => !prev);
+  // };
+
+  const togglePlayerCollapsed = () => {
+    setCurrentPlayCollapsed((prev) => !prev);
+  };
+
   return (
-    <div className="h-full grid grid-rows-10">
-      <div className=" flex flex-col row-span-7 backdrop-blur-md bg-white/20 rounded-2xl p-4">
-        <h2 className="text-xl ">In Queue</h2>
+    <motion.div
+      layout
+      transition={{
+        delay: 0.1,
+        duration: 0.2,
+        ease: "easeInOut",
+      }}
+      className="h-full flex flex-col gap-4"
+    >
+      <div
+        className={`flex flex-col backdrop-blur-md bg-white/20 rounded-2xl p-4 ${currentPlayCollapsed ? "h-[80%]" : "h-[60%]"}`}
+      >
+        <h2 className="text-xl">Player Queue</h2>
         <div className="py-4 h-full overflow-y-auto">
           <ItemList
             items={mockMusicData}
@@ -20,34 +77,78 @@ export function RightBar() {
       </div>
 
       <motion.div
-        initial={{
-          opacity: 0,
-          y: 40,
-          scale: 0.95,
-          boxShadow: "0 0 0 0 rgba(0,0,0,0)",
-        }}
-        animate={{
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          boxShadow: "0 8px 32px 0 rgba(0,0,0,0.15)",
-        }}
-        transition={{ duration: 0.7, ease: "easeOut" }}
-        className="flex flex-col items-center justify-start gap-4 py-8 bg-red-500/30 backdrop-blur-md mt-4 rounded-2xl px-4 shadow-lg text-center will-change-transform row-span-3"
-        style={{ perspective: 1000 }}
+        layout
+        className={`backdrop-blur-md bg-white/20 rounded-2xl ${currentPlayCollapsed ? "h-[20%] !bg-green-700" : "h-[40%]"}`}
       >
-        <h3 className="text-xl font-bold  tracking-wide font-mono">
-          Lofi Music 24/7
-        </h3>
-        <p className="text-sm text-muted-foreground mb-4 font-mono">
-          Experience the world of lofi beats - chill, relax, and focus with
-          endless music.
-        </p>
-        <Button className="flex items-center gap-2 cursor-pointer backdrop-blur-md bg-red-400/10 hover:bg-red-600/10 transition-colors px-4 py-2 rounded-3xl  font-medium">
-          <Play className="w-5 h-5" />
-          Listen Now
-        </Button>
+        {!currentPlayCollapsed && (
+          <>
+            <div className="h-1/6 flex gap-2 justify-between items-center py-2 px-4">
+              <h2 className="text-xl">Current Playing</h2>
+              <Button
+                variant="ghost"
+                onClick={togglePlayerCollapsed}
+                className="size-10"
+              >
+                <ArrowDownLeft />
+              </Button>
+            </div>
+            <div className="h-1/2 flex gap-2 px-4 py-3">
+              <motion.img
+                initial={{ filter: "blur(10px)", rotate: -5 }}
+                animate={{ filter: "blur(0px)", rotate: 0 }}
+                transition={{ delay: 0.4, duration: 0.6, ease: "easeOut" }}
+                loading="lazy"
+                src={currentSongPlaying.cover}
+                className="w-1/3 rounded-2xl shadow-lg"
+                alt={currentSongPlaying.title}
+              />
+              <div className="w-2/3 flex flex-col gap-2">
+                <motion.div
+                  initial={{
+                    opacity: 0,
+                    filter: "blur(5px)",
+                    y: 10,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    filter: "blur(0px)",
+                    y: 0,
+                  }}
+                  transition={{
+                    delay: 0.3,
+                    duration: 0.3,
+                  }}
+                  className="flex flex-col py-2"
+                >
+                  <h2 className="uppercase text-lg">
+                    {currentSongPlaying.title}
+                  </h2>
+                  <span className="text-sm text-accent-foreground/30">
+                    {currentSongPlaying.artist}
+                  </span>
+                </motion.div>
+                <div className="flex flex-col gap-2 w-full">
+                  <Slider
+                    value={[songProgress]}
+                    onValueChange={(value) => setSongProgress(value[0])}
+                    max={songLength}
+                    step={1}
+                    onDoubleClick={(e) => e.stopPropagation()}
+                  />
+                  <div className="flex justify-between items-center gap-2 text-xs text-accent-foreground/50">
+                    <span>{formatTime(songProgress)}</span>
+                    <span>{formatTime(songLength)}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <MusicPlayerControls
+              togglePlayPause={togglePlayPause}
+              isMusicPaused={isMusicPaused}
+            />
+          </>
+        )}
       </motion.div>
-    </div>
+    </motion.div>
   );
 }

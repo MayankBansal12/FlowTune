@@ -91,7 +91,7 @@ export const ItemList = ({
 }) => (
   <AnimatePresence>
     <motion.div
-      className={`space-y-1  overflow-y-auto scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent hover:scrollbar-thumb-white/40 transition-colors h-full`}
+      className={`space-y-1 overflow-y-auto scrollbar-thin scrollbar-thumb-white/20 scrollbar-track-transparent hover:scrollbar-thumb-white/40 transition-colors h-full`}
       initial="hidden"
       animate="visible"
       exit="hidden"
