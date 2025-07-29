@@ -7,7 +7,7 @@ import { ArrowDownLeft } from "lucide-react";
 import { ItemList, SongItem } from "@/components/render-songs";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
-import { MusicPlayerControls } from "@/components/music-player-controls";
+import { MusicPlayerControls } from "@/components/rightbar/music-player-controls";
 import { formatTime, timeStringToSeconds } from "@/lib/helper";
 
 export function RightBar() {
@@ -36,9 +36,9 @@ export function RightBar() {
     return () => clearInterval(interval);
   }, [isMusicPaused, songLength]);
 
-  // const togglePlayPause = () => {
-  //   setIsMusicPaused((prev) => !prev);
-  // };
+  const togglePlayPause = () => {
+    setIsMusicPaused((prev) => !prev);
+  };
 
   // const toggleVolumeLevel = () => {
   //   if (!volumeOff) {
