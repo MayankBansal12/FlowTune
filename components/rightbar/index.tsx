@@ -1,7 +1,7 @@
 "use client";
 
 import { mockMusicData } from "@/__mocks__/mockSongsData";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { motion } from "motion/react";
 import {
   ArrowDownLeft,
@@ -14,6 +14,7 @@ import {
   Shuffle,
   Repeat,
   Repeat1,
+  ListMusic,
 } from "lucide-react";
 import { ItemList, SongItem } from "@/components/render-songs";
 import { Button } from "@/components/ui/button";
@@ -23,10 +24,8 @@ import usePlayerStore from "@/app/stores/usePlayerStore";
 
 export function RightBar() {
   const audioRef = useRef(null);
-  const [currentPlayCollapsed, setCurrentPlayCollapsed] = useState(false);
 
   const {
-    // State
     currentPlaying,
     isPlaying,
     isShuffle,
@@ -36,16 +35,16 @@ export function RightBar() {
     currentTime,
     duration,
     playerQueue,
+    currentPlayCollapsed,
+    toggleCurrentPlayCollapsed,
     currentSongIndex,
-
-    // Actions
     setAudioElement,
     togglePlayPause,
     playNext,
     playPrevious,
     toggleShuffle,
     toggleRepeat,
-    setVolumeLevel,
+    // setVolumeLevel,
     toggleMute,
     seekTo,
     updateCurrentTime,
@@ -98,17 +97,13 @@ export function RightBar() {
     seekTo(value[0]);
   };
 
-  const handleVolumeChange = (value) => {
-    const newVolume = value[0];
-    setVolumeLevel(newVolume);
-  };
+  // const handleVolumeChange = (value) => {
+  //   const newVolume = value[0];
+  //   setVolumeLevel(newVolume);
+  // };
 
   const handleVolumeClick = () => {
     toggleMute();
-  };
-
-  const togglePlayerCollapsed = () => {
-    setCurrentPlayCollapsed((prev) => !prev);
   };
 
   const getQueueItems = () => {
@@ -135,10 +130,12 @@ export function RightBar() {
         className="h-full flex flex-col gap-4"
       >
         <div
-          className={`flex flex-col backdrop-blur-md bg-white/20 rounded-2xl p-4 ${currentPlayCollapsed ? "h-[80%]" : "h-[60%]"}`}
+          className={`flex flex-col backdrop-blur-md bg-white/20 rounded-2xl py-2 ${currentPlayCollapsed ? "h-[80%]" : "h-[60%]"}`}
         >
-          <h2 className="text-xl">Player Queue</h2>
-          <div className="py-4 h-full overflow-y-auto">
+          <h2 className="text-lg flex gap-2 py-4 px-4 items-center">
+            <ListMusic /> Player Queue
+          </h2>
+          <div className="h-full overflow-y-auto">
             <ItemList
               items={getQueueItems()}
               ItemComponent={SongItem}
@@ -152,18 +149,18 @@ export function RightBar() {
           className={`backdrop-blur-md bg-white/20 rounded-2xl ${currentPlayCollapsed ? "h-[20%] !bg-green-700" : "h-[40%]"}`}
         >
           {!currentPlayCollapsed && currentPlaying ? (
-            <>
-              <div className="h-1/6 flex gap-2 justify-between items-center py-2 px-4">
+            <div className="flex flex-col gap-4">
+              <div className="flex gap-2 justify-between items-center py-2 px-4">
                 <h2 className="text-xl">Current Playing</h2>
                 <Button
                   variant="ghost"
-                  onClick={togglePlayerCollapsed}
+                  onClick={toggleCurrentPlayCollapsed}
                   className="size-10"
                 >
                   <ArrowDownLeft />
                 </Button>
               </div>
-              <div className="h-1/2 flex gap-2 px-4 py-3">
+              <div className="flex gap-2 px-4 py-3">
                 <motion.img
                   initial={{ filter: "blur(10px)", rotate: -5 }}
                   animate={{ filter: "blur(0px)", rotate: 0 }}
@@ -215,7 +212,7 @@ export function RightBar() {
               </div>
 
               {/* Player Controls */}
-              <div className="h-1/3 flex items-center justify-center gap-4 px-4">
+              <div className="flex items-center justify-center gap-4 px-4">
                 <Button
                   size="sm"
                   variant="ghost"
@@ -240,11 +237,11 @@ export function RightBar() {
                 </Button>
 
                 <Button
-                  size="sm"
+                  size="lg"
                   onClick={togglePlayPause}
-                  className="inset-0 rounded-full cursor-pointer p-2"
+                  className="inset-0 bg-accent-foreground rounded-full cursor-pointer p-2"
                 >
-                  {isPlaying ? <Pause size={16} /> : <Play size={16} />}
+                  {isPlaying ? <Pause size={20} /> : <Play size={20} />}
                 </Button>
 
                 <Button
@@ -270,30 +267,31 @@ export function RightBar() {
                   {isRepeat ? <Repeat1 size={16} /> : <Repeat size={16} />}
                 </Button>
 
-                <div className="flex gap-2 items-center ml-4">
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    className="cursor-pointer p-1"
-                    onClick={handleVolumeClick}
-                  >
-                    {isMuted || volumeLevel === 0 ? (
-                      <VolumeOff size={16} />
-                    ) : (
-                      <Volume2 size={16} />
-                    )}
-                  </Button>
-                  <Slider
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="cursor-pointer p-1"
+                  onClick={handleVolumeClick}
+                >
+                  {isMuted || volumeLevel === 0 ? (
+                    <VolumeOff size={16} />
+                  ) : (
+                    <Volume2 size={16} />
+                  )}
+                </Button>
+
+                {/* <div className="flex gap-2 items-center ml-4"> */}
+                {/* <Slider
                     value={[isMuted ? 0 : volumeLevel]}
                     onValueChange={handleVolumeChange}
                     max={100}
                     step={1}
                     onDoubleClick={(e) => e.stopPropagation()}
                     className="w-20"
-                  />
-                </div>
+                  /> */}
+                {/* </div> */}
               </div>
-            </>
+            </div>
           ) : (
             <div className="h-full flex items-center justify-center text-center p-4">
               <div>

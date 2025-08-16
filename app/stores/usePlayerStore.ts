@@ -7,6 +7,7 @@ const usePlayerStore = create()(
       audioElement: null,
       setAudioElement: (audioElement) => set({ audioElement }),
       playerQueue: [],
+      currentPlayCollapsed: true,
       currentSongIndex: -1,
       currentPlaying: null,
       isPlaying: false,
@@ -80,7 +81,6 @@ const usePlayerStore = create()(
       },
 
       setIsShuffle: (isShuffle) => set({ isShuffle }),
-
       toggleShuffle: () => {
         const { isShuffle, playerQueue } = get();
         if (!isShuffle && playerQueue.length > 1) {
@@ -107,6 +107,13 @@ const usePlayerStore = create()(
         set({ isRepeat: !isRepeat });
       },
 
+      setCurrentPlayCollapsed: (currentPlayCollapsed) =>
+        set({ currentPlayCollapsed }),
+      toggleCurrentPlayCollapsed: () => {
+        const { currentPlayCollapsed } = get();
+        set({ currentPlayCollapsed: !currentPlayCollapsed });
+      },
+
       playSong: (song) => {
         const { audioElement } = get();
         if (audioElement && song?.audioSrc) {
@@ -116,6 +123,7 @@ const usePlayerStore = create()(
           set({
             currentPlaying: song,
             isPlaying: true,
+            currentPlayCollapsed: false,
           });
         }
       },
