@@ -2,18 +2,12 @@
 
 import { mockMusicData } from "@/__mocks__/mockSongsData";
 import React, { useEffect, useRef } from "react";
-import { motion } from "motion/react";
+import { motion, AnimatePresence, LayoutGroup } from "motion/react";
 import {
   ArrowDownLeft,
+  ArrowUpRight,
   Play,
   Pause,
-  SkipBack,
-  SkipForward,
-  Volume2,
-  VolumeOff,
-  Shuffle,
-  Repeat,
-  Repeat1,
   ListMusic,
 } from "lucide-react";
 import { ItemList, SongItem } from "@/components/render-songs";
@@ -21,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { formatTime } from "@/lib/helper";
 import usePlayerStore from "@/app/stores/usePlayerStore";
+import { MusicPlayerControls } from "./music-player-controls";
 
 export function RightBar() {
   const audioRef = useRef(null);
@@ -28,8 +23,6 @@ export function RightBar() {
   const {
     currentPlaying,
     isPlaying,
-    isShuffle,
-    isRepeat,
     isMuted,
     volumeLevel,
     currentTime,
@@ -40,12 +33,6 @@ export function RightBar() {
     currentSongIndex,
     setAudioElement,
     togglePlayPause,
-    playNext,
-    playPrevious,
-    toggleShuffle,
-    toggleRepeat,
-    // setVolumeLevel,
-    toggleMute,
     seekTo,
     updateCurrentTime,
     updateDuration,
@@ -76,34 +63,19 @@ export function RightBar() {
       handleSongEnd();
     };
 
-    const handleError = (e) => {
-      console.error("Audio error:", e);
-    };
-
     audio.addEventListener("timeupdate", handleTimeUpdate);
     audio.addEventListener("loadedmetadata", handleLoadedMetadata);
     audio.addEventListener("ended", handleEnded);
-    audio.addEventListener("error", handleError);
 
     return () => {
       audio.removeEventListener("timeupdate", handleTimeUpdate);
       audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
       audio.removeEventListener("ended", handleEnded);
-      audio.removeEventListener("error", handleError);
     };
   }, [updateCurrentTime, updateDuration, handleSongEnd]);
 
   const handleSeek = (value) => {
     seekTo(value[0]);
-  };
-
-  // const handleVolumeChange = (value) => {
-  //   const newVolume = value[0];
-  //   setVolumeLevel(newVolume);
-  // };
-
-  const handleVolumeClick = () => {
-    toggleMute();
   };
 
   const getQueueItems = () => {
@@ -115,22 +87,23 @@ export function RightBar() {
   };
 
   return (
-    <>
+    <LayoutGroup id="rightbar">
       <audio ref={audioRef} preload="metadata">
         <track kind="captions" />
       </audio>
 
       <motion.div
         layout
-        transition={{
-          delay: 0.1,
-          duration: 0.2,
-          ease: "easeInOut",
-        }}
+        transition={{ layout: { type: "spring", stiffness: 300, damping: 30 } }}
         className="h-full flex flex-col gap-4"
       >
-        <div
-          className={`flex flex-col backdrop-blur-md bg-white/20 rounded-2xl py-2 ${currentPlayCollapsed ? "h-[80%]" : "h-[60%]"}`}
+        {/* Player Queue */}
+        <motion.div
+          layout
+          transition={{
+            layout: { type: "spring", stiffness: 300, damping: 30 },
+          }}
+          className={`flex flex-col overflow-hidden backdrop-blur-md bg-white/20 rounded-2xl py-2 ${currentPlayCollapsed ? "h-[80%]" : "h-[60%]"}`}
         >
           <h2 className="text-lg flex gap-2 py-4 px-4 items-center">
             <ListMusic /> Player Queue
@@ -142,168 +115,192 @@ export function RightBar() {
               isRightBar={true}
             />
           </div>
-        </div>
+        </motion.div>
 
+        {/* Current Playing */}
         <motion.div
           layout
-          className={`backdrop-blur-md bg-white/20 rounded-2xl ${currentPlayCollapsed ? "h-[20%] !bg-green-700" : "h-[40%]"}`}
+          transition={{
+            layout: { type: "spring", stiffness: 300, damping: 30 },
+          }}
+          className={`overflow-hidden backdrop-blur-md bg-white/20 rounded-2xl ${currentPlayCollapsed ? "h-[20%]" : "h-[40%]"}`}
         >
-          {!currentPlayCollapsed && currentPlaying ? (
-            <div className="flex flex-col gap-4">
-              <div className="flex gap-2 justify-between items-center py-2 px-4">
-                <h2 className="text-xl">Current Playing</h2>
-                <Button
-                  variant="ghost"
-                  onClick={toggleCurrentPlayCollapsed}
-                  className="size-10"
-                >
-                  <ArrowDownLeft />
-                </Button>
-              </div>
-              <div className="flex gap-2 px-4 py-3">
-                <motion.img
-                  initial={{ filter: "blur(10px)", rotate: -5 }}
-                  animate={{ filter: "blur(0px)", rotate: 0 }}
-                  transition={{ delay: 0.4, duration: 0.6, ease: "easeOut" }}
-                  loading="lazy"
-                  src={currentPlaying.cover}
-                  className="w-1/3 rounded-2xl shadow-lg"
-                  alt={currentPlaying.title}
-                />
-                <div className="w-2/3 flex flex-col gap-2">
-                  <motion.div
-                    initial={{
-                      opacity: 0,
-                      filter: "blur(5px)",
-                      y: 10,
-                    }}
-                    animate={{
-                      opacity: 1,
-                      filter: "blur(0px)",
-                      y: 0,
-                    }}
-                    transition={{
-                      delay: 0.3,
-                      duration: 0.3,
-                    }}
-                    className="flex flex-col py-2"
-                  >
-                    <h2 className="uppercase text-lg">
-                      {currentPlaying.title}
-                    </h2>
-                    <span className="text-sm text-accent-foreground/30">
-                      {currentPlaying.artist}
-                    </span>
-                  </motion.div>
-                  <div className="flex flex-col gap-2 w-full">
-                    <Slider
-                      value={[currentTime]}
-                      onValueChange={handleSeek}
-                      max={duration || 100}
-                      step={1}
-                      onDoubleClick={(e) => e.stopPropagation()}
-                    />
-                    <div className="flex justify-between items-center gap-2 text-xs text-accent-foreground/50">
-                      <span>{formatTime(currentTime)}</span>
-                      <span>{formatTime(duration)}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Player Controls */}
-              <div className="flex items-center justify-center gap-4 px-4">
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="cursor-pointer p-1"
-                  onClick={toggleShuffle}
-                  style={{
-                    color: isShuffle ? "#4caf50" : "white",
-                    opacity: isShuffle ? 1 : 0.7,
-                  }}
-                >
-                  <Shuffle size={16} />
-                </Button>
-
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="cursor-pointer p-1"
-                  onClick={playPrevious}
-                  disabled={playerQueue.length <= 1}
-                >
-                  <SkipBack size={16} />
-                </Button>
-
-                <Button
-                  size="lg"
-                  onClick={togglePlayPause}
-                  className="inset-0 bg-accent-foreground rounded-full cursor-pointer p-2"
-                >
-                  {isPlaying ? <Pause size={20} /> : <Play size={20} />}
-                </Button>
-
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="cursor-pointer p-1"
-                  onClick={playNext}
-                  disabled={playerQueue.length <= 1}
-                >
-                  <SkipForward size={16} />
-                </Button>
-
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="cursor-pointer p-1"
-                  onClick={toggleRepeat}
-                  style={{
-                    color: isRepeat ? "#4caf50" : "white",
-                    opacity: isRepeat ? 1 : 0.7,
-                  }}
-                >
-                  {isRepeat ? <Repeat1 size={16} /> : <Repeat size={16} />}
-                </Button>
-
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  className="cursor-pointer p-1"
-                  onClick={handleVolumeClick}
-                >
-                  {isMuted || volumeLevel === 0 ? (
-                    <VolumeOff size={16} />
-                  ) : (
-                    <Volume2 size={16} />
-                  )}
-                </Button>
-
-                {/* <div className="flex gap-2 items-center ml-4"> */}
-                {/* <Slider
-                    value={[isMuted ? 0 : volumeLevel]}
-                    onValueChange={handleVolumeChange}
-                    max={100}
-                    step={1}
-                    onDoubleClick={(e) => e.stopPropagation()}
-                    className="w-20"
-                  /> */}
-                {/* </div> */}
-              </div>
-            </div>
-          ) : (
-            <div className="h-full flex items-center justify-center text-center p-4">
-              <div>
+          <AnimatePresence mode="popLayout" initial={false}>
+            {!currentPlaying ? (
+              <motion.div
+                key="no-song"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="h-full flex flex-col items-center justify-center p-4"
+              >
                 <h3 className="text-lg font-medium mb-2">No song playing</h3>
                 <p className="text-sm text-accent-foreground/50">
-                  Click on a song to start playing
+                  Double click on a song to start playing
                 </p>
-              </div>
-            </div>
-          )}
+              </motion.div>
+            ) : currentPlayCollapsed ? (
+              <motion.div
+                key="collapsed"
+                layout
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{
+                  layout: { type: "spring", stiffness: 300, damping: 30 },
+                }}
+                className="flex py-2 px-4 h-full"
+              >
+                <div className="flex gap-2 justify-center items-center">
+                  <div className="group relative w-1/3">
+                    <motion.img
+                      layoutId="current-playing-poster"
+                      initial={{ filter: "blur(5px)", rotate: -5 }}
+                      animate={{ filter: "blur(0px)", rotate: 0 }}
+                      transition={{
+                        delay: 0.2,
+                        duration: 0.3,
+                        ease: "easeOut",
+                      }}
+                      loading="lazy"
+                      src={currentPlaying.cover}
+                      className="w-full rounded-2xl shadow-lg group-hover:shadow-2xl"
+                      alt={currentPlaying.title}
+                    />
+                    <div
+                      className={`absolute inset-0 bg-black/30 rounded-2xl transition-opacity group-hover:opacity-100 ${!isPlaying ? "opacity-100" : "opacity-0"}`}
+                    ></div>
+                    <Button
+                      onClick={togglePlayPause}
+                      className={`h-full absolute top-1/2 left-1/2 inset-0 bg-accent-foreground rounded-full cursor-pointer p-2 group-hover:opacity-100 transition-opacity ${!isPlaying ? "opacity-100" : "opacity-0"}`}
+                    >
+                      {isPlaying ? <Pause size={32} /> : <Play size={32} />}
+                    </Button>
+                  </div>
+                  <div className="w-2/3 flex flex-col gap-2">
+                    <motion.div
+                      layoutId="current-playing-title"
+                      initial={{
+                        opacity: 0,
+                        filter: "blur(5px)",
+                      }}
+                      animate={{
+                        opacity: 1,
+                        filter: "blur(0px)",
+                      }}
+                      transition={{
+                        delay: 0.3,
+                        duration: 0.3,
+                      }}
+                      className="flex flex-col py-2"
+                    >
+                      <h2 className="uppercase text-lg">
+                        {currentPlaying.title}
+                      </h2>
+                      <span className="text-sm text-accent-foreground/30">
+                        {currentPlaying.artist}
+                      </span>
+                    </motion.div>
+                    <motion.div
+                      layoutId="current-playing-slider"
+                      className="flex flex-col gap-2 w-full"
+                    >
+                      <Slider
+                        value={[currentTime]}
+                        onValueChange={handleSeek}
+                        max={duration || 100}
+                        step={1}
+                        onDoubleClick={(e) => e.stopPropagation()}
+                      />
+                      <div className="flex justify-between items-center gap-2 text-xs text-accent-foreground/50">
+                        <span>{formatTime(currentTime)}</span>
+                        <span>{formatTime(duration)}</span>
+                      </div>
+                    </motion.div>
+                  </div>
+                </div>
+                <Button size="icon" onClick={toggleCurrentPlayCollapsed}>
+                  <ArrowUpRight />
+                </Button>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="expanded"
+                layout
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{
+                  layout: { type: "spring", stiffness: 300, damping: 30 },
+                }}
+                className="flex flex-col gap-4"
+              >
+                <div className="flex gap-2 justify-between items-center py-2 px-4">
+                  <h2 className="text-xl">Current Playing</h2>
+                  <Button size="icon" onClick={toggleCurrentPlayCollapsed}>
+                    <ArrowDownLeft />
+                  </Button>
+                </div>
+                <div className="flex gap-2 px-4 py-3">
+                  <motion.img
+                    layoutId="current-playing-poster"
+                    initial={{ filter: "blur(10px)", rotate: -5 }}
+                    animate={{ filter: "blur(0px)", rotate: 0 }}
+                    transition={{ delay: 0.4, duration: 0.6, ease: "easeOut" }}
+                    loading="lazy"
+                    src={currentPlaying.cover}
+                    className="w-1/3 rounded-2xl shadow-lg"
+                    alt={currentPlaying.title}
+                  />
+                  <div className="w-2/3 flex flex-col gap-2">
+                    <motion.div
+                      layoutId="current-playing-title"
+                      initial={{
+                        opacity: 0,
+                        filter: "blur(5px)",
+                      }}
+                      animate={{
+                        opacity: 1,
+                        filter: "blur(0px)",
+                      }}
+                      transition={{
+                        delay: 0.3,
+                        duration: 0.3,
+                      }}
+                      className="flex flex-col py-2"
+                    >
+                      <h2 className="uppercase text-lg">
+                        {currentPlaying.title}
+                      </h2>
+                      <span className="text-sm text-accent-foreground/30">
+                        {currentPlaying.artist}
+                      </span>
+                    </motion.div>
+                    <motion.div
+                      layoutId="current-playing-slider"
+                      className="flex flex-col gap-2 w-full"
+                    >
+                      <Slider
+                        value={[currentTime]}
+                        onValueChange={handleSeek}
+                        max={duration || 100}
+                        step={1}
+                        onDoubleClick={(e) => e.stopPropagation()}
+                      />
+                      <div className="flex justify-between items-center gap-2 text-xs text-accent-foreground/50">
+                        <span>{formatTime(currentTime)}</span>
+                        <span>{formatTime(duration)}</span>
+                      </div>
+                    </motion.div>
+                  </div>
+                </div>
+
+                <MusicPlayerControls />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
       </motion.div>
-    </>
+    </LayoutGroup>
   );
 }

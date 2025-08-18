@@ -55,7 +55,12 @@ const MusicPlayer = () => {
   const [playerExpand, setPlayerExpand] = useState(true);
 
   useEffect(() => {
-    console.log("audioRef.current", audioRef.current);
+    console.log(
+      "audioRef.current",
+      audioRef.current,
+      " current volume level: ",
+      volumeLevel,
+    );
     if (audioRef.current) {
       setAudioElement(audioRef.current);
 
