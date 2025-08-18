@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -30,8 +32,16 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background flex h-screen w-screen overflow-hidden`}
       >
         {children}
+
+        <SpeedInsights />
+        <Analytics />
         <Toaster richColors closeButton position="top-center" />
       </body>
+      <script
+        defer
+        src="https://cloud.umami.is/script.js"
+        data-website-id="ca8bd88e-fd6a-430f-a76f-7aa9f5ef3cc0"
+      ></script>
     </html>
   );
 }
