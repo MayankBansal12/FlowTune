@@ -38,6 +38,7 @@ export default [
       ...pluginJsxA11y.configs.recommended.rules,
       ...prettierConfig.rules,
       "prettier/prettier": "error",
+      "react/prop-types": "off",
       "react/react-in-jsx-scope": "off", // Not needed in Next.js
       "react/jsx-uses-react": "off", // Not needed in Next.js
       "react/jsx-uses-vars": "error",
